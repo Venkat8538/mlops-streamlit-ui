@@ -21,11 +21,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Debug GitHub context
+        run: |
+          echo "Repository: ${{ github.repository }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Expected: repo:Venkat8538/mlops-streamlit-ui:ref:refs/heads/main"
+
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-to-assume: arn:aws:iam::482227257362:role/MLOps-github-actions-role
           aws-region: us-east-1
+          role-session-name: GitHubActions-${{ github.run_id }}
 
       - name: Login to ECR
         uses: aws-actions/amazon-ecr-login@v2
