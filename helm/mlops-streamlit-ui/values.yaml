@@ -1,0 +1,36 @@
+replicaCount: 2
+
+image:
+  repository: "REPLACE_ME"  # e.g. 123456789012.dkr.ecr.us-east-1.amazonaws.com/mlops-streamlit-ui
+  tag: "v1"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8501
+
+env:
+  API_URL: "http://fastapi:8000"
+  APP_VERSION: "1.0.0"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+probes:
+  enabled: true
+  initialDelaySeconds: 20
+  periodSeconds: 10
+
+ingress:
+  enabled: false
+  className: "alb"
+  host: "streamlit.example.com"
+  scheme: "internet-facing"  # or "internal"
+  certificateArn: ""         # ACM cert ARN for HTTPS
+  groupName: ""              # optional
